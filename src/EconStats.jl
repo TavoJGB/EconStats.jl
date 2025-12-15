@@ -1,5 +1,14 @@
 module EconStats
 
-# Write your package code here.
+    BASE_FOLDER = dirname(@__DIR__)
 
+    # External dependencies
+    using StatsBase         # weighted mean etc.
+    using StatsBase: dot
+        export mean, std, median, dot
+
+    # Package dependencies
+    include(joinpath(BASE_FOLDER, "src", "dep", "stats.jl"))
+        export weighted_mean, get_share
+    
 end
