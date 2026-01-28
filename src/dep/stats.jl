@@ -31,10 +31,18 @@ function weighted_std_nomissing(v::AbstractVector, weights::AbstractVector)
     x = v[keep]
     w = weights[keep]
     isempty(x) && return missing
-    μ = dot(x, w) / sum(w)
-    sqrt(sum(w .* (x .- μ).^2) / sum(w))
+    μ = weighted_mean(x, w)
+    return sqrt(dot(w, (x .- μ).^2) / sum(w))
 end
-weighted_std(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false) = skipmissing ? weighted_std_nomissing(v, weights) : (isempty(v) ? missing : (μ = dot(v, weights) / sum(weights); sqrt(sum(weights .* (v .- μ).^2) / sum(weights))))
+function weighted_std(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false)
+    isempty(v) && return missing
+    if skipmissing
+        return weighted_std_nomissing(v, weights)
+    else
+        μ = weighted_mean(v, weights)
+        return sqrt(dot(weights, (v .- μ).^2) / sum(weights))
+    end
+end
 
 
 
