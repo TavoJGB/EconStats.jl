@@ -42,5 +42,5 @@ weighted_std(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false
     WEIGHTED SHARE
 ==========================================================================#
 
-get_share(v::AbstractVector, condition::Function, weights::AbstractVector; kwargs...) = weighted_mean(condition.(v), weights; kwargs...)
-get_share(v::AbstractVector, condition, weights::AbstractVector; kwargs...) = get_share(v, x -> x == condition, weights; kwargs...)
+weighted_share(v::AbstractVector, condition::Function, weights::AbstractVector; kwargs...) = weighted_mean(condition.(v), weights; kwargs...)
+weighted_share(v::AbstractVector, condition, weights::AbstractVector; kwargs...) = weighted_share(v, x -> x == condition, weights; kwargs...)
