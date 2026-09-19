@@ -16,9 +16,39 @@ weighted_sum(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false
 
 function weighted_mean_nomissing(v::AbstractVector, weights::AbstractVector)
     keep = @. !(ismissing(v) | ismissing(weights) | isnan(v) | isnan(weights))
-    dot(v[keep], weights[keep]) / sum(weights[keep])
+    return dot(v[keep], weights[keep]) / sum(weights[keep])
 end
 weighted_mean(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false) = skipmissing ? weighted_mean_nomissing(v, weights) : dot(v, weights) / sum(weights)
+
+
+
+#==========================================================================
+    WEIGHTED MEDIAN
+==========================================================================#
+
+function weighted_median_nomissing(v::AbstractVector, weights::AbstractVector)
+    keep = @. !(ismissing(v) | ismissing(weights) | isnan(v) | isnan(weights))
+    x = v[keep]
+    w = weights[keep]
+    isempty(x) && return missing
+    sorted_indices = sortperm(x)
+    x_sorted = x[sorted_indices]
+    w_sorted = w[sorted_indices]
+    cum_weights = cumsum(w_sorted)
+    half_total_weight = sum(w_sorted) / 2
+    median_index = findfirst(cum_weights .>= half_total_weight)
+    return x_sorted[median_index]
+end
+function weighted_median(v::AbstractVector, weights::AbstractVector; skipmissing::Bool=false)
+    skipmissing && return weighted_median_nomissing(v, weights)
+    sorted_indices = sortperm(v)
+    x_sorted = v[sorted_indices]
+    w_sorted = weights[sorted_indices]
+    cum_weights = cumsum(w_sorted)
+    half_total_weight = sum(w_sorted) / 2
+    median_index = findfirst(cum_weights .>= half_total_weight)
+    return x_sorted[median_index]
+end
 
 
 

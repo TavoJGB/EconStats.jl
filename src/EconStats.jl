@@ -9,6 +9,6 @@ module EconStats
 
     # Package dependencies
     include(joinpath(BASE_FOLDER, "src", "dep", "stats.jl"))
-        export weighted_sum, weighted_mean, weighted_std, weighted_share
+        export weighted_sum, weighted_mean, weighted_median, weighted_std, weighted_share
     
 end
